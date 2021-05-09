@@ -37,8 +37,6 @@ public class CrimeController {
 
 	}
 	
-	
-	
 	@PutMapping("/crime/{id}")
 	ResponseEntity<Crime> updateCategory(@Validated @RequestBody Crime crime, @PathVariable Long id){
 		Crime result= crimeRepo.save(crime);
