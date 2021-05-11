@@ -44,7 +44,7 @@ public class CrimeController {
 	}
 	
 
-	@DeleteMapping("/post/{id}")
+	@DeleteMapping("/crime/{id}")
 	public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
 		crimeRepo.deleteById(id);
 		return ResponseEntity.ok().build();

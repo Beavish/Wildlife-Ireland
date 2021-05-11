@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,10 +39,16 @@ public class PostController {
 
 	}
 	
+	@PostMapping("/post/new")
+	ResponseEntity<Post> createPost(@Validated @RequestBody Post post){
+		Post result= postRepo.save(post);
+		return ResponseEntity.ok().body(result);
+	}
+	
 	
 	
 	@PutMapping("/post/{id}")
-	ResponseEntity<Post> updateCategory(@Validated @RequestBody Post post, @PathVariable Long id){
+	ResponseEntity<Post> updatePost(@Validated @RequestBody Post post, @PathVariable Long id){
 		Post result= postRepo.save(post);
 		return ResponseEntity.ok().body(result);
 	}

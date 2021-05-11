@@ -53,19 +53,21 @@ public class UserService implements UserDetailsService {
 	}
 
 	public void signUpUser(User user) {
-
+		System.out.print(user.getEmail());
+		System.out.print("*****************************************************************************************************************************************************************");
 		final String encryptedPassword = bCryptPasswordEncoder.encode(user.getPassword());
 
 		user.setPassword(encryptedPassword);
 
 		final User createdUser = userRepository.save(user);
-
+		
+		
 		final ConfirmationToken confirmationToken = new ConfirmationToken(user);
 
 		confirmationTokenService.saveConfirmationToken(confirmationToken);
 
 		sendConfirmationMail(user.getEmail(), confirmationToken.getConfirmationToken());
-
+		
 	}
 
 	public void confirmUser(ConfirmationToken confirmationToken) {
@@ -79,4 +81,5 @@ public class UserService implements UserDetailsService {
 		confirmationTokenService.deleteConfirmationToken(confirmationToken.getId());
 
 	}
+	
 }

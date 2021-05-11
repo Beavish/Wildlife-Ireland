@@ -27,12 +27,14 @@ public class UserController {
 	@GetMapping("/sign-in")
 	String signIn() {
 
-		return "sign-in";
+		return "Success";
+		//return "sign-in";
 	}
 
 	@GetMapping("/sign-up")
 	String signUpPage(User user) {
-
+		
+		System.out.print(user);
 		return "sign-up";
 	}
 
@@ -40,8 +42,10 @@ public class UserController {
 	String signUp(User user) {
 
 		userService.signUpUser(user);
+		System.out.print(user);
 
-		return "redirect:/sign-in";
+		return "Success";
+		//"redirect:/sign-in";
 	}
 
 	@GetMapping("/sign-up/confirm")
@@ -51,7 +55,8 @@ public class UserController {
 
 		optionalConfirmationToken.ifPresent(userService::confirmUser);
 
-		return "redirect:/sign-in";
+		//return "redirect:/sign-in";
+		return "Success";
 	}
 
 }
