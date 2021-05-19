@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.kieran.app.model.ConfirmationToken;
 import com.kieran.app.model.User;
@@ -17,9 +18,11 @@ import com.kieran.app.repo.UserRepo;
 
 import lombok.AllArgsConstructor;
 
+@CrossOrigin(origins = "http://localhost:4200")
 
 @Service
 @AllArgsConstructor
+
 public class UserService implements UserDetailsService {
 
 	private final UserRepo userRepository;
@@ -53,8 +56,7 @@ public class UserService implements UserDetailsService {
 	}
 
 	public void signUpUser(User user) {
-		System.out.print(user.getEmail());
-		System.out.print("*****************************************************************************************************************************************************************");
+		
 		final String encryptedPassword = bCryptPasswordEncoder.encode(user.getPassword());
 
 		user.setPassword(encryptedPassword);

@@ -23,17 +23,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
-		http.authorizeRequests()
-				.antMatchers("/*")
-				.permitAll();
+		http
+				.authorizeRequests()
+				.antMatchers("/**")
+				.permitAll()
+				.anyRequest()
+				.authenticated();
+				//.and()
+				//.formLogin()
+				//.loginPage("/sign-in")
+				//.permitAll();
 		
-		http.cors().and().csrf().disable();
+		http.csrf().disable().cors().and();
+
+		
+	
 	}
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userService)
 				.passwordEncoder(bCryptPasswordEncoder);
+		// tell the app that we're using a DB and that we need to use the User details 
 	}
 
 }
