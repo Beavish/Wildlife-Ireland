@@ -4,6 +4,7 @@ package com.kieran.app.service;
 import java.text.MessageFormat;
 import java.util.Optional;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.client.HttpClientErrorException.Unauthorized;
 
 import com.kieran.app.model.ConfirmationToken;
 import com.kieran.app.model.User;
@@ -32,6 +34,8 @@ public class UserService implements UserDetailsService {
 	private final ConfirmationTokenService confirmationTokenService;
 
 	private final EmailSenderService emailSenderService;
+	
+	
 
 	void sendConfirmationMail(String userMail, String token) {
 
@@ -49,7 +53,7 @@ public class UserService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-		final Optional<User> optionalUser = userRepository.findByEmail(email);
+		final Optional<User> optionalUser = Optional.ofNullable(userRepository.findByEmail(email));
 
 		return optionalUser.orElseThrow(() -> new UsernameNotFoundException(MessageFormat.format("User with email {0} cannot be found.", email)));
 
@@ -72,7 +76,7 @@ public class UserService implements UserDetailsService {
 		
 	}
 
-	public void confirmUser(ConfirmationToken confirmationToken) {
+	public void confirmUser(ConfirmationToken confirmationToken) throws Unauthorized{
 
 		final User user = confirmationToken.getUser();
 
@@ -82,6 +86,23 @@ public class UserService implements UserDetailsService {
 
 		confirmationTokenService.deleteConfirmationToken(confirmationToken.getId());
 
+	}
+
+	public  User loginUser(User loginUser , String password)  {
+		
+		String currentPassword = loginUser.getPassword();
+		String checkingPassword = bCryptPasswordEncoder.encode(password);
+		System.out.println(currentPassword);
+		System.out.println(checkingPassword);
+		
+		if(currentPassword.equals(checkingPassword)) {
+			
+			
+			return loginUser;
+		}
+		return null; 
+				
+		
 	}
 	
 }

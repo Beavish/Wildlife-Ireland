@@ -8,6 +8,6 @@ import com.kieran.app.model.User;
 
 public interface UserRepo extends JpaRepository<User,Long>{
 	
-	Optional<User> findByEmail(String email);
+	User findByEmail(String email);
 
 }
