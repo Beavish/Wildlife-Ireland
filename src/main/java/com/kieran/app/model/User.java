@@ -1,88 +1,34 @@
-    package com.kieran.app.model;
+package com.kieran.app.model;
 
-import java.util.Collection;
-import java.util.Collections;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import java.time.Instant;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import static javax.persistence.GenerationType.IDENTITY;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Getter
-@Setter
-@Builder
-@EqualsAndHashCode
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
-@Entity(name = "Users")
-public class User implements UserDetails {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-
-	private String name;
-
-	private String surname;
-
-	private String email;
-
-	private String password;
-
-	@Builder.Default
-	private UserRole userRole = UserRole.USER;
-
-	@Builder.Default
-	private Boolean locked = false;
-
-	@Builder.Default
-	private Boolean enabled = false;
-
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-
-		final SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(userRole.name());
-		return Collections.singletonList(simpleGrantedAuthority);
-	}
-
-	@Override
-	public String getPassword() {
-		return password;
-	}
-
-	@Override
-	public String getUsername() {
-		return email;
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		return !locked;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return enabled;
-	}
+@NoArgsConstructor
+@Entity
+public class User {
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    private Long userId;
+    @NotBlank(message = "Username is required")
+    private String username;
+    @NotBlank(message = "Password is required")
+    private String password;
+    @Email
+    @NotEmpty(message = "Email is required")
+    private String email;
+    private Instant created;
+    private boolean enabled;
 }
