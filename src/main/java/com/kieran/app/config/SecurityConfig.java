@@ -9,6 +9,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.kieran.app.security.JwtAuthenticationFilter;
+
 import org.springframework.security.config.BeanIds;
 
 import lombok.AllArgsConstructor;
@@ -26,13 +30,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
+	 @Bean
+	    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+	        return new JwtAuthenticationFilter();
+	    }
 
 	@Override
 	public void configure(HttpSecurity httpSecurity) throws Exception {
 
 		httpSecurity.csrf().disable().authorizeRequests().antMatchers("/api/auth/**").permitAll().anyRequest()
 				.authenticated();
-
+		httpSecurity.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 
 	@Autowired
