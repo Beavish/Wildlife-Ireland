@@ -10,10 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kieran.app.dto.AuthenticationResponse;
 import com.kieran.app.dto.LoginRequest;
+import com.kieran.app.dto.RefreshTokenRequest;
 import com.kieran.app.dto.RegisterRequest;
 import com.kieran.app.service.AuthService;
+import com.kieran.app.service.RefreshTokenService;
 
 import static org.springframework.http.HttpStatus.OK;
+
+import javax.validation.Valid;
 
 import lombok.AllArgsConstructor;
 
@@ -23,6 +27,8 @@ import lombok.AllArgsConstructor;
 public class AuthController {
 
 	private final AuthService authService;
+    private final RefreshTokenService refreshTokenService;
+
 
 	@PostMapping("/signup")
 	public ResponseEntity<String> signup(@RequestBody RegisterRequest registerRequest) {
@@ -38,5 +44,15 @@ public class AuthController {
 	 @PostMapping("/login")
 	    public AuthenticationResponse login(@RequestBody LoginRequest loginRequest) {
 	        return authService.login(loginRequest);
+	    }
+	 @PostMapping("refresh/token")
+	 public AuthenticationResponse refreshTokens(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest ) {
+		return authService.refreshToken(refreshTokenRequest);
+		 
+	 }
+	  @PostMapping("/logout")
+	    public ResponseEntity<String> logout(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
+	        refreshTokenService.deleteRefreshToken(refreshTokenRequest.getRefreshToken());
+	        return ResponseEntity.status(OK).body("Refresh Token Deleted Successfully!!");
 	    }
 }

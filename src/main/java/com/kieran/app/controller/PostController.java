@@ -14,24 +14,25 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.kieran.app.model.Post;
 import com.kieran.app.repo.PostRepo;
-@Controller
-@RequestMapping(path = "/api/v1")
+@RestController
+@RequestMapping(path = "/api/post")
 public class PostController {
 
 	@Autowired
 	private PostRepo postRepo;
 
 
-	@GetMapping(path = "/post/all")
+	@GetMapping(path = "/all")
 	public @ResponseBody Iterable<Post> getAllPosts() {
 		// This returns a JSON or XML with the users
 		return postRepo.findAll();
 	}
 
-	@GetMapping("/post/{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<?> getPost(@PathVariable Long id) {
 		Optional<Post> post = postRepo.findById(id);
 		return post.map(response -> ResponseEntity.ok().body(response))
@@ -39,7 +40,7 @@ public class PostController {
 
 	}
 	
-	@PostMapping("/post/new")
+	@PostMapping("/new")
 	ResponseEntity<Post> createPost(@Validated @RequestBody Post post){
 		Post result= postRepo.save(post);
 		return ResponseEntity.ok().body(result);
@@ -47,14 +48,14 @@ public class PostController {
 	
 	
 	
-	@PutMapping("/post/{id}")
+	@PutMapping("/update/{id}")
 	ResponseEntity<Post> updatePost(@Validated @RequestBody Post post, @PathVariable Long id){
 		Post result= postRepo.save(post);
 		return ResponseEntity.ok().body(result);
 	}
 	
 
-	@DeleteMapping("/post/{id}")
+	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
 		postRepo.deleteById(id);
 		return ResponseEntity.ok().build();

@@ -1,35 +1,39 @@
 package com.kieran.app.security;
-
-import static java.util.Date.from;
-
-import java.security.Key;
-import java.sql.Date;
-import java.time.Instant;
-
-import javax.annotation.PostConstruct;
-
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
+import com.kieran.app.exceptions.WildlifeIrelandException;
+
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.*;
+import java.security.cert.CertificateException;
+import java.sql.Date;
+import java.time.Instant;
+
+import static io.jsonwebtoken.Jwts.parserBuilder;
+import static java.util.Date.from;
 
 @Service
 public class JwtProvider {
-	
-	@Value("${jwt.expiration.time}")
+
+    private KeyStore keyStore;
+    @Value("${jwt.expiration.time}")
     private Long jwtExpirationInMillis;
-  
-    private Key key;
-    
-    
+
     @PostConstruct
     public void init() {
-       
-    	key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+        try {
+            keyStore = KeyStore.getInstance("JKS");
+            InputStream resourceAsStream = getClass().getResourceAsStream("/WI.jks");
+            keyStore.load(resourceAsStream, "secret".toCharArray());//pword for keystore
+        } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException e) {
+            throw new WildlifeIrelandException("Exception occurred while loading keystore ", e);
+        }
 
     }
 
@@ -38,30 +42,53 @@ public class JwtProvider {
         return Jwts.builder()
                 .setSubject(principal.getUsername())
                 .setIssuedAt(from(Instant.now()))
-                .signWith(key)
+                .signWith(getPrivateKey())
                 .setExpiration(Date.from(Instant.now().plusMillis(jwtExpirationInMillis)))
                 .compact();
+    }
+
+    public String generateTokenWithUserName(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(from(Instant.now()))
+                .signWith(getPrivateKey())
+                .setExpiration(Date.from(Instant.now().plusMillis(jwtExpirationInMillis)))
+                .compact();
+    }
+
+    private PrivateKey getPrivateKey() {
+        try {
+            return (PrivateKey) keyStore.getKey("WI", "secret".toCharArray());
+        } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
+            throw new WildlifeIrelandException("Exception occured while retrieving public key from keystore", e);
+        }
+    }
+
+    public boolean validateToken(String jwt) {
+        parserBuilder().setSigningKey(getPublickey()).build().parseClaimsJws(jwt);
+        return true;
+    }
+
+    private PublicKey getPublickey() {
+        try {
+            return keyStore.getCertificate("WI").getPublicKey();
+        } catch (KeyStoreException e) {
+            throw new WildlifeIrelandException("Exception occured while " +
+                    "retrieving public key from keystore", e);
+        }
+    }
+
+    public String getUsernameFromJwt(String token) {
+        Claims claims = parserBuilder()
+                .setSigningKey(getPublickey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.getSubject();
     }
 
     public Long getJwtExpirationInMillis() {
         return jwtExpirationInMillis;
     }
-
-
-
-	public boolean validateToken(String jwt) {
-
-		Jwts.parser().setSigningKey(key).parseClaimsJws(jwt);
-		
-		return true;
-	}
-
-	public String getUsernameFromJWT(String token) {
-		Claims claims = Jwts.parser()
-				.setSigningKey(key)
-				.parseClaimsJws(token)
-				.getBody();
-		return claims.getSubject();
-		
-	}
 }

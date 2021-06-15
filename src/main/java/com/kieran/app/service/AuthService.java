@@ -4,6 +4,8 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
+import javax.validation.Valid;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.kieran.app.dto.AuthenticationResponse;
 import com.kieran.app.dto.LoginRequest;
+import com.kieran.app.dto.RefreshTokenRequest;
 import com.kieran.app.dto.RegisterRequest;
 import com.kieran.app.exceptions.WildlifeIrelandException;
 import com.kieran.app.model.NotificationEmail;
@@ -102,4 +105,11 @@ public class AuthService {
 	                .username(loginRequest.getUsername())
 	                .build();
 	    }
+
+	public AuthenticationResponse refreshToken(@Valid RefreshTokenRequest refreshTokenRequest) {
+		 refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
+		 jwtProvider.generateTokenWithUserName(refreshTokenRequest.getUsername());
+		 
+		return null;
+	}
 }
