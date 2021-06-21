@@ -38,10 +38,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(HttpSecurity httpSecurity) throws Exception {
-
-		httpSecurity.csrf().disable().authorizeRequests().antMatchers("/api/auth/**").permitAll().anyRequest()
-				.authenticated();
+		
+		httpSecurity.cors().disable();
+		httpSecurity.csrf()	
+					.disable()
+					.authorizeRequests()
+					.antMatchers("/api/auth/**", "/api/post/**")
+					.permitAll()
+					.anyRequest()
+					.authenticated();
+		
+	
+		
+		
 		httpSecurity.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+		
+		
 	}
 
 	@Autowired
