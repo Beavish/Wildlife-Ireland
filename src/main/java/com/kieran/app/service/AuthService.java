@@ -50,6 +50,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
     private final RefreshTokenService refreshTokenService;
+    
 
 	@Transactional
 	public void signup(@RequestBody RegisterRequest registerRequest) {
@@ -94,6 +95,10 @@ public class AuthService {
 	    }
 
 	 public AuthenticationResponse login(LoginRequest loginRequest) {
+		 	
+		Optional<User> loginUser = userRepo.findByUsername(loginRequest.getUsername());
+		Long user_id =loginUser.get().getUserId();
+		 	
 	        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
 	                loginRequest.getPassword()));
 	        SecurityContextHolder.getContext().setAuthentication(authenticate);
@@ -103,6 +108,7 @@ public class AuthService {
 	                .refreshToken(refreshTokenService.generateRefreshToken().getToken())
 	                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
 	                .username(loginRequest.getUsername())
+	                .user_id(user_id)
 	                .build();
 	    }
 
@@ -110,6 +116,11 @@ public class AuthService {
 		 refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
 		 jwtProvider.generateTokenWithUserName(refreshTokenRequest.getUsername());
 		 
+		return null;
+	}
+
+	public Object getCurrentUser() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 }

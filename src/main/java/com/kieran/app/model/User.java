@@ -1,12 +1,14 @@
 package com.kieran.app.model;
 
 import lombok.AllArgsConstructor;
+import java.util.Set;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -31,4 +33,5 @@ public class User {
     private String email;
     private Instant created;
     private boolean enabled;
+
 }
