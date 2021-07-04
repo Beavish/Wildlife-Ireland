@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.kieran.app.model.Record;
 import com.kieran.app.repo.RecordRepo;
 @Controller
-@RequestMapping(path = "/api/v1")
+@RequestMapping(path = "/api/")
 public class RecordController {
 
 	@Autowired

@@ -6,10 +6,10 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
 @EnableAsync
-public class WildlifePlatfromApplication {
+public class WildlifePlatformApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(WildlifePlatfromApplication.class, args);
+		SpringApplication.run(WildlifePlatformApplication.class, args);
 	}
 
 }
