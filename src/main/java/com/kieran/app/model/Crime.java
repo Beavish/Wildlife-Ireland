@@ -29,5 +29,11 @@ public class Crime {
 	
 	private Date create_date;
 	
+	private String reporter_email;
+	
+	private String reporter_ip;
+	
+	
+	
 
 }

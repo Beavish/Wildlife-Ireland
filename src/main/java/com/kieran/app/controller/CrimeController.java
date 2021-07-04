@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.kieran.app.model.Crime;
 import com.kieran.app.repo.CrimeRepo;
 @Controller
-@RequestMapping(path = "/api/v1")
+@RequestMapping(path = "/api")
 public class CrimeController {
 
 	@Autowired
@@ -38,7 +38,7 @@ public class CrimeController {
 
 	}
 	
-	@PostMapping("/crime/{id}")
+	@PostMapping("/crime/new")
 	ResponseEntity<Crime> createCrime(@Validated @RequestBody Crime crime){
 		Crime result= crimeRepo.save(crime);
 		return ResponseEntity.ok().body(result);
