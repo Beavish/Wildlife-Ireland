@@ -40,7 +40,16 @@ public class RecordController {
 	
 	@PostMapping("/record/new")
 	ResponseEntity<Record> createrecord(@Validated @RequestBody Record record){
-		Record result= recRepo.save(record);
+		Record result= new Record();
+		result.setAnimal(record.getAnimal());
+		result.setCreate_date(record.getCreate_date());
+		result.setGeo_location(record.getGeo_location());
+		result.setPlant(record.getPlant());
+		result.setQuantity(record.getQuantity());
+		result.setName(record.getName().toLowerCase());
+		
+		recRepo.save(result);
+		
 		return ResponseEntity.ok().body(result);
 	}
 	
