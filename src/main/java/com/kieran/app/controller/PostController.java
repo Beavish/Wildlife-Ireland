@@ -54,6 +54,7 @@ public class PostController {
 		newPost.setCreate_date(post.getCreate_date());
 		newPost.setUsername(post.getUsername());
 		newPost.setUserId(user_id);
+		newPost.setEducational(post.isEducational());
 		Post result= postRepo.save(newPost);
 		
 		return ResponseEntity.ok().body(result);
@@ -66,6 +67,8 @@ public class PostController {
 		Post result= postRepo.save(post);
 		return ResponseEntity.ok().body(result);
 	}
+	
+	
 	
 
 	@DeleteMapping("/post/{id}")
@@ -80,5 +83,16 @@ public class PostController {
 		return postRepo.findByUsername(username);
 		 
 	}
+	
+	@GetMapping("/post/educational")
+	public @ResponseBody Iterable<Post> postEducational() {
+		
+		 
+		for(int i = 0 ;i < postRepo.findAll().size(); i ++) {
+				System.out.print(i + "FUCK ");
+					}
+		return null;
+			
+						}
 
 }

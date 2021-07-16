@@ -15,6 +15,8 @@ public class PostResponse {
     private String content;
     private String username;
 	private Date create_date;
+	private boolean educational;
+
 
 
  

@@ -19,35 +19,33 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import static javax.persistence.FetchType.LAZY;
 
-
 @Entity
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Post {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long post_id;
-	
+
 	private String title;
-	
+
 	private String content;
-	
+
 	private Date create_date;
 	
-	  @NotBlank(message = "Username is required")
-	    private String username;
-	  
+    private boolean educational;
+
+	@NotBlank(message = "Username is required")
+	private String username;
+
 	private Long userId;
-	
+
 	@JsonBackReference
 	@ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "userId", referencedColumnName = "userId",insertable = false, updatable = false, nullable=true)
-    private User user;
-
-	
-
+	@JoinColumn(name = "userId", referencedColumnName = "userId", insertable = false, updatable = false, nullable = true)
+	private User user;
 
 }
