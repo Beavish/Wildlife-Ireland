@@ -86,13 +86,8 @@ public class PostController {
 	
 	@GetMapping("/post/educational")
 	public @ResponseBody Iterable<Post> postEducational() {
-		
-		 
-		for(int i = 0 ;i < postRepo.findAll().size(); i ++) {
-				System.out.print(i + "FUCK ");
-					}
-		return null;
 			
-						}
+		return postRepo.findByEducation();
+				}
 
 }
