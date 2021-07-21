@@ -11,7 +11,8 @@ public interface PostRepo extends JpaRepository<Post,Long>{
 	//Optional<Post> findByUser(String userID);
 
 	Iterable<Post> findByUsername(String username);
-
+	
+	// define query and tell spring its SQL
 	@Query(value = "SELECT * FROM Post WHERE post.educational = true",nativeQuery = true)
 	Iterable<Post> findByEducation();
 
