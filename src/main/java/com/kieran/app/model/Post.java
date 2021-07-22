@@ -1,7 +1,6 @@
 package com.kieran.app.model;
 
 import java.util.Date;
-import java.util.Optional;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
